@@ -10,8 +10,9 @@
         android:id="@+id/dialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="Title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/darker_gray" />
 
     <EditText
         android:id="@+id/InputDialog"
@@ -23,8 +24,9 @@
         android:id="@+id/dialogTitle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Note"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="Description"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/darker_gray" />
 
     <EditText
         android:id="@+id/InputDialog2"

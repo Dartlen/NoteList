@@ -1,6 +1,7 @@
 package by.project.dartlen.notelist.note;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder>{
 
     private List<Note> list = new ArrayList<>(0);
     private Context mContext;
+    private OnItemClicked onClick;
+
     public NoteAdapter(Context context){
         mContext = context;
     }
@@ -27,33 +30,52 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder>{
         return new NoteHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.note_item, parent,false));
     }
 
+    public void setOnClick(OnItemClicked onClick)
+    {
+        this.onClick=onClick;
+    }
+
     @Override
-    public void onBindViewHolder(final NoteHolder holder, int position) {
+    public void onBindViewHolder(final NoteHolder holder,final int position) {
         holder.name.setText(list.get(position).getName());
+        if(list.get(position).getComplete()) {
+            holder.text.setPaintFlags(holder.text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.name.setPaintFlags(holder.text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }else {
+            holder.text.setPaintFlags(0);
+            holder.name.setPaintFlags(0);
+        }
         holder.text.setText(list.get(position).getEntry());
 
-        //final RecyclerItem itemList = listItems.get(position);
-        //holder.txtTitle.setText(itemList.getTitle());
-        //holder.txtDescription.setText(itemList.getDescription());
         holder.option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Display option menu
+                //onClick.onItemClick(position);
 
                 PopupMenu popupMenu = new PopupMenu(mContext, holder.option);
-                popupMenu.inflate(R.menu.menu_note);
+                if(list.get(position).getComplete()) {
+                    popupMenu.inflate(R.menu.menu_note_complete);
+                }else {
+                    popupMenu.inflate(R.menu.menu_note);
+                }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
 
                         switch (item.getItemId()) {
-                            case R.id.mnu_item_save:
-                                //Toast.makeText(mContext, "Saved", Toast.LENGTH_LONG).show();
+                            case R.id.mnu_item_complete:
+                                onClick.onItemClickComplete(list.get(position));
+                                //Toast.makeText(mContext, "Completed", Toast.LENGTH_LONG).show();
+                                break;
+                            case R.id.mnu_item_edite:
+                                onClick.onItemClickEdite(list.get(position));
+                                //Toast.makeText(mContext, "Edited", Toast.LENGTH_LONG).show();
                                 break;
                             case R.id.mnu_item_delete:
                                 //Delete item
                                 //listItems.remove(position);
-                                notifyDataSetChanged();
+                                onClick.onItemClickDelete(list.get(position));
+                                //notifyDataSetChanged();
                                 //Toast.makeText(mContext, "Deleted", Toast.LENGTH_LONG).show();
                                 break;
                             default:

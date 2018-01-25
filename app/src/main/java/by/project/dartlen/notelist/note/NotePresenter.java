@@ -16,6 +16,8 @@ public class NotePresenter implements NoteContract.Presenter {
     DaoSession daoSession;
 
     private NoteDao noteDao;
+    private boolean flagedite;
+    private Note editeNote;
 
     @Inject
     NotePresenter(){}
@@ -42,14 +44,24 @@ public class NotePresenter implements NoteContract.Presenter {
     @Override
     public void fabClicked(String name, String text) {
         if(name.length()>3 && text.length()>3){
-            Note tmpNote = new Note();
-            tmpNote.setName(name);
-            tmpNote.setEntry(text);
-            appendNote(tmpNote);
-            start();
-            mNoteView.showSnackbar("Note saved");
+            if(flagedite){
+                editeNote.setName(name);
+                editeNote.setEntry(text);
+                updateNote(editeNote);
+                mNoteView.clearInputDialog();
+                start();
+            }else {
+                Note tmpNote = new Note();
+                tmpNote.setName(name);
+                tmpNote.setEntry(text);
+                tmpNote.setComplete(false);
+                appendNote(tmpNote);
+                start();
+                mNoteView.clearInputDialog();
+                mNoteView.showSnackbar("Note saved");
+            }
         }else{
-            mNoteView.showSnackbar("Low size name or note!");
+            mNoteView.showSnackbar("Short name or note!");
         }
     }
 
@@ -67,5 +79,30 @@ public class NotePresenter implements NoteContract.Presenter {
         noteDao.update(data);
     }
 
+    @Override
+    public void onItemDeleteClicked(Note data) {
+        noteDao.delete(data);
+        start();
+        //mNoteView.showSnackbar("Note deleted");
+    }
+
+    @Override
+    public void onItemCompleteClicked(Note data) {
+        if(data.getComplete()){
+            data.setComplete(false);
+        }else {
+            data.setComplete(true);
+        }
+
+        updateNote(data);
+        start();
+        //mNoteView.showSnackbar("Note updated");
+    }
+
+    @Override
+    public void onClickedEditeNote(boolean flag, Note data) {
+        flagedite=flag;
+        editeNote = data;
+    }
 }
 

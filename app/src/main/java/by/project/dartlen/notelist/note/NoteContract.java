@@ -10,9 +10,13 @@ public interface NoteContract {
     interface View extends BaseView<NoteContract.Presenter> {
         void showSnackbar(String text);
         void showNotes(List<Note> notes);
+        void clearInputDialog();
     }
     interface Presenter extends BasePresenter<NoteContract.View>{
         void fabClicked(String name, String text);
         void start();
+        void onItemDeleteClicked(Note data);
+        void onItemCompleteClicked(Note data);
+        void onClickedEditeNote(boolean flag, Note data);
     }
 }

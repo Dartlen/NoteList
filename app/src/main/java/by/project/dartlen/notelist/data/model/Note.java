@@ -8,6 +8,7 @@ import org.greenrobot.greendao.DaoException;
 
 @Entity(active = true, nameInDb = "Note")
 public class Note {
+
     @Id
     private Long id;
 
@@ -17,6 +18,9 @@ public class Note {
     @NotNull
     private String entry;
 
+    @NotNull
+    private boolean complete;
+
     /** Used to resolve relations */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
@@ -25,11 +29,13 @@ public class Note {
     @Generated(hash = 363862535)
     private transient NoteDao myDao;
 
-    @Generated(hash = 927168036)
-    public Note(Long id, @NotNull String name, @NotNull String entry) {
+    @Generated(hash = 603915139)
+    public Note(Long id, @NotNull String name, @NotNull String entry,
+            boolean complete) {
         this.id = id;
         this.name = name;
         this.entry = entry;
+        this.complete = complete;
     }
 
     @Generated(hash = 1272611929)
@@ -58,6 +64,14 @@ public class Note {
 
     public void setEntry(String entry) {
         this.entry = entry;
+    }
+
+    public boolean getComplete() {
+        return this.complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
     }
 
     /**

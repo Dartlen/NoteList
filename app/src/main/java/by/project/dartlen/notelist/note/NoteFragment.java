@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ import by.project.dartlen.notelist.di.scope.ActivityScope;
 import dagger.android.support.DaggerFragment;
 
 @ActivityScope
-public class NoteFragment extends DaggerFragment implements NoteContract.View {
+public class NoteFragment extends DaggerFragment implements NoteContract.View, OnItemClicked {
 
     @Inject
     public NoteFragment(){}
@@ -51,6 +52,8 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View {
     @BindView(R.id.InputDialog2)
     TextView textNote;*/
 
+    private EditText userInputDialogEditText;
+    private EditText userInputDialogEditText2;
     private NoteAdapter noteAdapter;
     private AlertDialog alertDialog;
 
@@ -78,6 +81,7 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         noteAdapter = new NoteAdapter(getContext());
+        noteAdapter.setOnClick(this);
         recyclerView.setAdapter(noteAdapter);
         mNotePresenter.start();
 
@@ -91,14 +95,15 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View {
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(getActivity());
         alertDialogBuilderUserInput.setView(mView);
 
-        final EditText userInputDialogEditText = (EditText) mView.findViewById(R.id.InputDialog);
-        final EditText userInputDialogEditText2 = (EditText) mView.findViewById(R.id.InputDialog2);
+        userInputDialogEditText = (EditText) mView.findViewById(R.id.InputDialog);
+        userInputDialogEditText2 = (EditText) mView.findViewById(R.id.InputDialog2);
         alertDialogBuilderUserInput
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogBox, int id) {
                         mNotePresenter.fabClicked(userInputDialogEditText.getText().toString(),
                                 userInputDialogEditText2.getText().toString());
+
                     }
                 })
 
@@ -106,10 +111,18 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogBox, int id) {
                                 dialogBox.cancel();
+                                mNotePresenter.onClickedEditeNote(false, null);
+                                clearInputDialog();
                             }
                         });
 
         alertDialog = alertDialogBuilderUserInput.create();
+    }
+
+    @Override
+    public void clearInputDialog() {
+        userInputDialogEditText.setText("");
+        userInputDialogEditText2.setText("");
     }
 
     @Override
@@ -123,5 +136,23 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View {
         noteAdapter.clearAll();
         noteAdapter.notifyDataSetChanged();
         noteAdapter.addAll(notes);
+    }
+
+    @Override
+    public void onItemClickDelete(Note data) {
+        mNotePresenter.onItemDeleteClicked(data);
+    }
+
+    @Override
+    public void onItemClickComplete(Note data) {
+        mNotePresenter.onItemCompleteClicked(data);
+    }
+
+    @Override
+    public void onItemClickEdite(Note data) {
+        userInputDialogEditText.setText(data.getName());
+        userInputDialogEditText2.setText(data.getEntry());
+        alertDialog.show();
+        mNotePresenter.onClickedEditeNote(true, data);
     }
 }
