@@ -11,6 +11,10 @@ public interface NoteContract {
         void showSnackbar(String text);
         void showNotes(List<Note> notes);
         void clearInputDialog();
+        void checkedNote(Note data);
+        void deletedNote(Note data);
+        void updateNote(Note data);
+        void appendNote(Note data);
     }
     interface Presenter extends BasePresenter<NoteContract.View>{
         void fabClicked(String name, String text);

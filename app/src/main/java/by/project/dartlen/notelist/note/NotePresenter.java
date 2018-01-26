@@ -49,14 +49,15 @@ public class NotePresenter implements NoteContract.Presenter {
                 editeNote.setEntry(text);
                 updateNote(editeNote);
                 mNoteView.clearInputDialog();
-                start();
+                mNoteView.updateNote(editeNote);
             }else {
                 Note tmpNote = new Note();
                 tmpNote.setName(name);
                 tmpNote.setEntry(text);
                 tmpNote.setComplete(false);
                 appendNote(tmpNote);
-                start();
+                //start();
+                mNoteView.appendNote(tmpNote);
                 mNoteView.clearInputDialog();
                 mNoteView.showSnackbar("Note saved");
             }
@@ -82,7 +83,9 @@ public class NotePresenter implements NoteContract.Presenter {
     @Override
     public void onItemDeleteClicked(Note data) {
         noteDao.delete(data);
-        start();
+        mNoteView.deletedNote(data);
+        //start();
+
         //mNoteView.showSnackbar("Note deleted");
     }
 
@@ -93,15 +96,15 @@ public class NotePresenter implements NoteContract.Presenter {
         }else {
             data.setComplete(true);
         }
-
         updateNote(data);
-        start();
+        mNoteView.checkedNote(data);
+        //start();
         //mNoteView.showSnackbar("Note updated");
     }
 
     @Override
     public void onClickedEditeNote(boolean flag, Note data) {
-        flagedite=flag;
+        flagedite = flag;
         editeNote = data;
     }
 }

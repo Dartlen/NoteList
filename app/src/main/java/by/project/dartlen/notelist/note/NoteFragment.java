@@ -3,19 +3,21 @@ package by.project.dartlen.notelist.note;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -60,6 +62,7 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View, O
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mNotePresenter.takeView(this);
     }
 
@@ -67,10 +70,11 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View, O
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_note, container, false);
-
+        getActivity().invalidateOptionsMenu();
         ButterKnife.bind(this, root);
 
         initInputDialog();
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +90,33 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View, O
         mNotePresenter.start();
 
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main, menu);
+
+        MenuItem search = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        search(searchView);
+    }
+
+    private void search(SearchView searchView) {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                if (noteAdapter != null) noteAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
 
     private void initInputDialog(){
@@ -154,5 +185,25 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View, O
         userInputDialogEditText2.setText(data.getEntry());
         alertDialog.show();
         mNotePresenter.onClickedEditeNote(true, data);
+    }
+
+    @Override
+    public void checkedNote(Note data) {
+        noteAdapter.checkedNote(data);
+    }
+
+    @Override
+    public void deletedNote(Note data) {
+        noteAdapter.deleteNote(data);
+    }
+
+    @Override
+    public void updateNote(Note data) {
+        noteAdapter.updateNote(data);
+    }
+
+    @Override
+    public void appendNote(Note data) {
+        noteAdapter.append(data);
     }
 }
