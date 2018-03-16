@@ -1,6 +1,5 @@
 package by.project.dartlen.notelist.note;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -76,12 +75,7 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View, O
         initInputDialog();
 
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.show();
-            }
-        });
+        fab.setOnClickListener(view -> alertDialog.show());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         noteAdapter = new NoteAdapter(getContext());
@@ -130,21 +124,14 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View, O
         userInputDialogEditText2 = (EditText) mView.findViewById(R.id.InputDialog2);
         alertDialogBuilderUserInput
                 .setCancelable(false)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogBox, int id) {
-                        mNotePresenter.fabClicked(userInputDialogEditText.getText().toString(),
-                                userInputDialogEditText2.getText().toString());
-
-                    }
-                })
+                .setPositiveButton("Ok", (dialogBox, id) -> mNotePresenter.fabClicked(userInputDialogEditText.getText().toString(),
+                        userInputDialogEditText2.getText().toString()))
 
                 .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogBox, int id) {
-                                dialogBox.cancel();
-                                mNotePresenter.onClickedEditeNote(false, null);
-                                clearInputDialog();
-                            }
+                        (dialogBox, id) -> {
+                            dialogBox.cancel();
+                            mNotePresenter.onClickedEditeNote(false, null);
+                            clearInputDialog();
                         });
 
         alertDialog = alertDialogBuilderUserInput.create();

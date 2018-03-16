@@ -20,7 +20,16 @@ public class NoteActivity extends DaggerAppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment, noteFragment).addToBackStack("notefragment").commit();
+        if(savedInstanceState == null)
+            getSupportFragmentManager().beginTransaction()
+                                       .add(R.id.fragment, noteFragment)
+                                       .addToBackStack("notefragment")
+                                       .commit();
+
+    }
+
+    @Override
+    public void onBackPressed() {
 
     }
 }

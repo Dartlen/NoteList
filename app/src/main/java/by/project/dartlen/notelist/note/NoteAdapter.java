@@ -23,7 +23,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
     private List<Note> listFiltered = new ArrayList<>(0);
     private Context mContext;
     private OnItemClicked onClick;
-
+    private String charString="";
+    private List<Note> lis;
     public NoteAdapter(Context context){
         mContext = context;
     }
@@ -40,49 +41,44 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
 
     @Override
     public void onBindViewHolder(final NoteHolder holder,final int position) {
-        holder.name.setText(listFiltered.get(position).getName());
-        if(listFiltered.get(position).getComplete()) {
+        if(listFiltered.size()==0)
+            lis = list;
+        holder.name.setText(lis.get(position).getName());
+        if(lis.get(position).getComplete()) {
             holder.text.setPaintFlags(holder.text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.name.setPaintFlags(holder.text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }else {
             holder.text.setPaintFlags(0);
             holder.name.setPaintFlags(0);
         }
-        holder.text.setText(listFiltered.get(position).getEntry());
+        holder.text.setText(lis.get(position).getEntry());
 
-        holder.option.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //onClick.onItemClick(position);
-
-                PopupMenu popupMenu = new PopupMenu(mContext, holder.option);
-                if(listFiltered.get(position).getComplete()) {
-                    popupMenu.inflate(R.menu.menu_note_complete);
-                }else {
-                    popupMenu.inflate(R.menu.menu_note);
-                }
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-
-                        switch (item.getItemId()) {
-                            case R.id.mnu_item_complete:
-                                onClick.onItemClickComplete(listFiltered.get(position));
-                                break;
-                            case R.id.mnu_item_edite:
-                                onClick.onItemClickEdite(listFiltered.get(position));
-                                break;
-                            case R.id.mnu_item_delete:
-                                onClick.onItemClickDelete(list.get(position));
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                popupMenu.show();
+        holder.option.setOnClickListener(v -> {
+            //onClick.onItemClick(position);
+            PopupMenu popupMenu = new PopupMenu(mContext, holder.option);
+            if(lis.get(position).getComplete()) {
+                popupMenu.inflate(R.menu.menu_note_complete);
+            }else {
+                popupMenu.inflate(R.menu.menu_note);
             }
+            popupMenu.setOnMenuItemClickListener(item -> {
+
+                switch (item.getItemId()) {
+                    case R.id.mnu_item_complete:
+                        onClick.onItemClickComplete(lis.get(position));
+                        break;
+                    case R.id.mnu_item_edite:
+                        onClick.onItemClickEdite(lis.get(position));
+                        break;
+                    case R.id.mnu_item_delete:
+                        onClick.onItemClickDelete(list.get(position));
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            });
+            popupMenu.show();
         });
     }
 
@@ -93,7 +89,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
 
-                String charString = charSequence.toString();
+                charString = charSequence.toString();
 
                 if (charString.isEmpty()) {
                     listFiltered = list;
@@ -123,7 +119,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
 
     @Override
     public int getItemCount() {
-        return listFiltered.size();
+        if(charString.isEmpty())
+            return list.size();
+        else
+            return listFiltered.size();
     }
 
     public void addAll(List<Note> list){
@@ -133,7 +132,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
     }
 
     public void add(Note r) {
-        listFiltered.add(r);
+        //listFiltered.add(r);
         list.add(r);
         notifyItemInserted(list.size() - 1);
         notifyItemInserted(listFiltered.size() - 1);
@@ -158,9 +157,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
         for(Note result: list)
             if(data.getName().equals(result.getName())) {
                 list.remove(result);
-                listFiltered.remove(result);
+                //listFiltered.remove(result);
                 notifyItemRemoved(list.indexOf(result));
                 notifyItemRangeChanged(list.indexOf(result), list.size());
+                notifyDataSetChanged();
                 break;
             }
     }
@@ -168,7 +168,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
         for(Note result: list)
             if(data.getName().equals(result.getName())) {
                 list.set(list.indexOf(result), data);
-                listFiltered.set(list.indexOf(result), data);
+                //listFiltered.set(list.indexOf(result), data);
                 notifyDataSetChanged();
                 break;
             }
@@ -176,6 +176,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
 
     public void append(Note r) {
         list.add(r);
+        //listFiltered.add(r);
         notifyItemInserted(list.size() - 1);
+        notifyDataSetChanged();
     }
 }
