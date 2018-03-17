@@ -107,5 +107,17 @@ public class NotePresenter implements NoteContract.Presenter {
         flagedite = flag;
         editeNote = data;
     }
+
+    @Override
+    public void onItemSelectClicked(Note data) {
+        mNoteView.showSetColor(data);
+    }
+
+    @Override
+    public void onSelectedColor(Note data, int color) {
+        data.setColor(color);
+        noteDao.update(data);
+        mNoteView.showSetColor(data);
+    }
 }
 

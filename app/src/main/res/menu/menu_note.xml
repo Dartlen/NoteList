@@ -3,4 +3,5 @@
     <item android:id="@+id/mnu_item_complete" android:title="Complete" />
     <item android:id="@+id/mnu_item_edite" android:title="Edite" />
     <item android:id="@+id/mnu_item_delete" android:title="Delete" />
+    <item android:id="@+id/mnu_item_set_color" android:title="Set color" />
 </menu>

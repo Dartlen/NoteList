@@ -7,4 +7,6 @@
     <color name="item">#FEF8BA</color>
     <color name="background_recycler">#F8F1A1</color>
     <color name="black">#000</color>
+    <color name="gray">#4312</color>
+    <color name="green">#7FFF00</color>
 </resources>

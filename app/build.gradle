@@ -39,4 +39,5 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
     implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'uk.co.jordanrobinson:android-color-picker:1.0.2'
 }

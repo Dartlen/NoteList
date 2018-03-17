@@ -6,4 +6,5 @@ public interface OnItemClicked {
     void onItemClickDelete(Note data);
     void onItemClickComplete(Note data);
     void onItemClickEdite(Note data);
+    void onItemClickedSetColor(Note data);
 }

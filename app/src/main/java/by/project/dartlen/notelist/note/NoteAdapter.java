@@ -43,6 +43,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
     public void onBindViewHolder(final NoteHolder holder,final int position) {
         if(listFiltered.size()==0)
             lis = list;
+        if(list.get(position).getColor()!=0)
+            holder.relative.setBackgroundColor(list.get(position).getColor());
         holder.name.setText(lis.get(position).getName());
         if(lis.get(position).getComplete()) {
             holder.text.setPaintFlags(holder.text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -73,6 +75,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
                     case R.id.mnu_item_delete:
                         onClick.onItemClickDelete(list.get(position));
                         break;
+                    case R.id.mnu_item_set_color:
+                        onClick.onItemClickedSetColor(list.get(position));
                     default:
                         break;
                 }
@@ -180,4 +184,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteHolder> implements Fil
         notifyItemInserted(list.size() - 1);
         notifyDataSetChanged();
     }
+
+
 }

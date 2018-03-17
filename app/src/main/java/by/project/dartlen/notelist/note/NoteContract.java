@@ -15,6 +15,8 @@ public interface NoteContract {
         void deletedNote(Note data);
         void updateNote(Note data);
         void appendNote(Note data);
+        void setColorNote(Note data);
+        void showSetColor(Note data);
     }
     interface Presenter extends BasePresenter<NoteContract.View>{
         void fabClicked(String name, String text);
@@ -22,5 +24,7 @@ public interface NoteContract {
         void onItemDeleteClicked(Note data);
         void onItemCompleteClicked(Note data);
         void onClickedEditeNote(boolean flag, Note data);
+        void onItemSelectClicked(Note data);
+        void onSelectedColor(Note data, int color);
     }
 }

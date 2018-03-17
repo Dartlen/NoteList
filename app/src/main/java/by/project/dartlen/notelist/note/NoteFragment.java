@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+
+import com.android.colorpicker.ColorPickerDialog;
 
 import java.util.List;
 
@@ -167,6 +170,12 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View, O
     }
 
     @Override
+    public void onItemClickedSetColor(Note data) {
+        //mNotePresenter.onItemSelectClicked(data);
+        showColourPicker(data);
+    }
+
+    @Override
     public void onItemClickEdite(Note data) {
         userInputDialogEditText.setText(data.getName());
         userInputDialogEditText2.setText(data.getEntry());
@@ -192,5 +201,36 @@ public class NoteFragment extends DaggerFragment implements NoteContract.View, O
     @Override
     public void appendNote(Note data) {
         noteAdapter.append(data);
+    }
+
+    @Override
+    public void setColorNote(Note data) {
+
+    }
+
+    public void showColourPicker(Note data) {
+        final ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
+        colorPickerDialog.initialize(R.string.colors,
+                new int[] {
+                        getResources().getColor(R.color.item),
+                        getResources().getColor(R.color.colorAccent),
+                        getResources().getColor(R.color.colorPrimaryDark),
+                        getResources().getColor(R.color.green)
+
+
+                }, getResources().getColor(R.color.cardview_light_background), 4, 2);
+
+        colorPickerDialog.setOnColorSelectedListener(color -> {
+            //noteAdapter.setColor(data, color);
+            mNotePresenter.onSelectedColor(data, color);
+        });
+
+        android.app.FragmentManager fm = getActivity().getFragmentManager();
+        colorPickerDialog.show(fm, "colorpicker");
+    }
+
+    @Override
+    public void showSetColor(Note data) {
+        noteAdapter.updateNote(data);
     }
 }

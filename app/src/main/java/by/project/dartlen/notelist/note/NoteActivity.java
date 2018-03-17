@@ -2,6 +2,11 @@ package by.project.dartlen.notelist.note;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
+
+import com.android.colorpicker.ColorPickerDialog;
+import com.android.colorpicker.ColorPickerSwatch;
 
 import javax.inject.Inject;
 
@@ -26,10 +31,14 @@ public class NoteActivity extends DaggerAppCompatActivity {
                                        .addToBackStack("notefragment")
                                        .commit();
 
+
+
     }
 
     @Override
     public void onBackPressed() {
 
     }
+
+
 }

@@ -21,6 +21,9 @@ public class Note {
     @NotNull
     private boolean complete;
 
+    @NotNull
+    private int color;
+
     /** Used to resolve relations */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
@@ -29,13 +32,14 @@ public class Note {
     @Generated(hash = 363862535)
     private transient NoteDao myDao;
 
-    @Generated(hash = 603915139)
-    public Note(Long id, @NotNull String name, @NotNull String entry,
-            boolean complete) {
+    @Generated(hash = 848715216)
+    public Note(Long id, @NotNull String name, @NotNull String entry, boolean complete,
+            int color) {
         this.id = id;
         this.name = name;
         this.entry = entry;
         this.complete = complete;
+        this.color = color;
     }
 
     @Generated(hash = 1272611929)
@@ -108,6 +112,14 @@ public class Note {
             throw new DaoException("Entity is detached from DAO context");
         }
         myDao.update(this);
+    }
+
+    public int getColor() {
+        return this.color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     /** called by internal mechanisms, do not call yourself. */
